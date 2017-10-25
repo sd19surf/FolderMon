@@ -5,26 +5,25 @@ use warnings;
 
 ## set to the directory or maybe I should allow for a config setting, CLI for now
 my $directory = $ARGV[0];
-my $test= $ARGV[1];
+my $landingDirectory= $ARGV[1];
 
+## checks to see if argument is a directory or not
 if(!$directory) {
-	die "Usage: perl extraction_code.pl <directory> <test>";
+	die "Usage: perl extraction_code.pl <source directory> <destination directory>";
 }elsif(!(-d $directory)){
 	die "$directory is not a directory. Kindly provide a valid directory to be monitored";
 }
 
-
-# Good use of the argument to not actively run the real code but to test all the directory mappings
-if(!$test) {
-     $test=0;
-}else{
-     $test=1;
+if(!$landingDirectory) {
+	die "Usage: perl extraction_code.pl <source directory> <destination directory>";
+}elsif(!(-d $landingDirectory)){
+	die "$landingDirectory is not a directory. Kindly provide a valid directory to drop the files into";
 }
 
 my $first_run = 'true';
 my @prev_files_list = ();
 my %prev_files_hash = ();
- my %current_files_hash = ();
+my %current_files_hash = ();
 
 ## Keep track of the files to ensure we extract them all 
 sub updateMaps {
@@ -47,6 +46,27 @@ sub updateMaps {
 	%prev_files_hash = %current_files_hash; 
   }
 
+sub untarFiles {
+
+   my @files = @_;
+   my $count = scalar(@files);
+
+# return the amount of files untarred for logging
+return $count;
+}
+
+sub moveFiles {
+
+  my @files = @_;
+  my $count = scalar(@files);
+
+
+# return the number of files moved for logging
+return $count;
+}
+
+# checks 12 iterations should change to allow to run for life
+
 foreach (1..12) {
    print "Count: $_\n";
    opendir(DIR, $directory);
@@ -64,6 +84,7 @@ foreach (1..12) {
          if(scalar(@files) > scalar(@prev_files_list)){
            print "Files has been added\n";
            updateMaps(@files);
+
          }elsif(scalar(@files) < scalar(@prev_files_list)) {
            print "Files have been deleted\n";
            updateMaps(@files);

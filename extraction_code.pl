@@ -34,6 +34,7 @@ sub updateMaps {
 	  }elsif(!$prev_files_hash{$_}){
 	     next if($_ eq '.' || $_ eq '..');
 	     print "File: $_ has been added now\n";
+	     #could call the untarFiles routine here 
 	  }
 	  $current_files_hash{$_} = 1;
 	}
@@ -50,6 +51,11 @@ sub untarFiles {
 
    my @files = @_;
    my $count = scalar(@files);
+
+	foreach(@files) {
+           system("tar -xvf $_ $landingDirectory") || warn "Might not be a tar file";
+
+	}
 
 # return the amount of files untarred for logging
 return $count;

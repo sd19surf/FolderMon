@@ -35,6 +35,7 @@ sub updateMaps {
 	     next if($_ eq '.' || $_ eq '..');
 	     print "File: $_ has been added now\n";
 	     #could call the untarFiles routine here 
+	     untarFiles($_);
 	  }
 	  $current_files_hash{$_} = 1;
 	}
